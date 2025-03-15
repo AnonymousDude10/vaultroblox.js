@@ -8,14 +8,30 @@ npm install vaultroblox.js
 
 ## Usage
 
-```javascript
+```typescript
 const Vault = require('vaultroblox.js');
 const client = new Vault('your-api-key');
 
-// Add a license
-async function addUserLicense() {
+// Add a license for Roblox user
+async function addRobloxLicense() {
   try {
-    const result = await client.addLicense('roblox-user-id', 'product-uuid');
+    const result = await client.addLicense({
+      robloxID: '123456789',
+      productUUID: 'product-uuid-here'
+    });
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Add a license for Discord user
+async function addDiscordLicense() {
+  try {
+    const result = await client.addLicense({
+      discordID: 'discord-user-id',
+      productUUID: 'product-uuid-here'
+    });
     console.log(result);
   } catch (error) {
     console.error(error);
@@ -23,9 +39,12 @@ async function addUserLicense() {
 }
 
 // Check a license
-async function checkUserLicense() {
+async function checkLicense() {
   try {
-    const result = await client.checkLicense('roblox-user-id', 'product-uuid');
+    const result = await client.checkLicense({
+      robloxID: '123456789',
+      productUUID: 'product-uuid-here'
+    });
     console.log(result.hasLicense);
   } catch (error) {
     console.error(error);
@@ -33,9 +52,12 @@ async function checkUserLicense() {
 }
 
 // Delete a license
-async function deleteUserLicense() {
+async function deleteLicense() {
   try {
-    const result = await client.deleteLicense('roblox-user-id', 'product-uuid');
+    const result = await client.deleteLicense({
+      robloxID: '123456789',
+      productUUID: 'product-uuid-here'
+    });
     console.log(result);
   } catch (error) {
     console.error(error);
@@ -50,18 +72,35 @@ async function deleteUserLicense() {
 ```typescript
 const client = new Vault(apiKey: string);
 ```
-apiKey` (required): Your API key
+
+- `apiKey` (required): Your API key
 
 ### Methods
 
-#### addLicense(robloxID: string, productUUID: string): Promise<any>
+#### addLicense(params: LicenseRequest): Promise<any>
 
-Adds a license for a user.
+Adds a license for a user. The `params` object must include either a `robloxID` or a `discordID`, along with a `productUUID`.
 
-#### deleteLicense(robloxID: string, productUUID: string): Promise<any>
+```typescript
+interface RobloxLicenseRequest {
+  robloxID: string;
+  productUUID: string;
+  discordID?: never;
+}
 
-Removes a user's license.
+interface DiscordLicenseRequest {
+  discordID: string;
+  productUUID: string;
+  robloxID?: never;
+}
 
-#### checkLicense(robloxID: string, productUUID: string): Promise<{ hasLicense: boolean }>
+type LicenseRequest = RobloxLicenseRequest | DiscordLicenseRequest;
+```
 
-Checks if a user has a valid license. Returns an object with a `hasLicense` boolean.
+#### deleteLicense(params: LicenseRequest): Promise<any>
+
+Removes a user's license. The `params` object follows the same structure as in `addLicense`.
+
+#### checkLicense(params: LicenseRequest): Promise<any>
+
+Checks if a user has a valid license. The `params` object follows the same structure as in `addLicense`.

@@ -1,6 +1,6 @@
 {
     "name": "vaultroblox.js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple API wrapper for the vault roblox API",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
